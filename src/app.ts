@@ -1,5 +1,5 @@
 import express from "express";
-//import router from "./api/router"; // add later
+import router from "./api/router"; // add later
 
 export default class App {
     public server: express.Application;
@@ -15,7 +15,6 @@ export default class App {
     }
 
     private router() {
-        // add later
-        //this.server.use(router);
+        this.server.use(router);
     }
 }
