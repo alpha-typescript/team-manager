@@ -1,5 +1,3 @@
-import ITeam from "./iTeam";
-
 export default interface IUser {
     id?: string;
     username?: string;
@@ -9,4 +7,5 @@ export default interface IUser {
     password?: string;
     team?: string;
     isAdmin?: boolean;
+    isLeader?: boolean;
 }

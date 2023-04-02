@@ -6,7 +6,7 @@ import ILogin from "../../interfaces/iLogin";
 class LoginController {
     async login(req: Request, res: Response) {
         try {
-            console.log("TESTE", req.body, "TESTE");
+            //console.log("TESTE", req.body, "TESTE");
 
             const credentials: ILogin = {
                 username: req.body.username,
@@ -15,17 +15,17 @@ class LoginController {
 
             const result = await loginServices.comparePassword(credentials);
 
+            console.log(result);
+
             if (result.status === 200) {
                 const jwt = jwtLib.sign(
                     { user: result.data },
                     process.env.JWTSECRET || "senha secreta"
                 );
                 res.cookie("session", jwt);
-                return res
-                    .status(result.status || 500)
-                    .json({
-                        message: `User '${credentials.username}' logged in successfully`,
-                    });
+                return res.status(result.status || 500).json({
+                    message: `User '${credentials.username}' logged in successfully`,
+                });
             }
 
             return res.status(result.status || 500).json(result.errors);

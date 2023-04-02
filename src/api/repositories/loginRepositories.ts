@@ -30,7 +30,15 @@ class LoginRepositories {
                 password: userResult[0].password,
                 team: userResult[0].team,
                 isAdmin: userResult[0].is_admin,
+                isLeader: false,
             };
+
+            if (user.team !== null) {
+                if (await this.isLeader(user)) {
+                    user.isLeader = true;
+                }
+            }
+
             result.data = user;
         } catch (error: any) {
             result.errors?.push(error.message);
@@ -38,6 +46,30 @@ class LoginRepositories {
         }
 
         return result;
+    }
+
+    private async isLeader(user: IUser): Promise<boolean> {
+        if (!user.id) {
+            throw new Error("Internal server error");
+        }
+
+        try {
+            const queryText = `
+                SELECT * FROM teams
+                WHERE leader = $1;
+            `;
+            const values = [user.id];
+
+            const result = await this.db.query(queryText, values);
+
+            if (result.length === 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (error) {
+            throw error;
+        }
     }
 }
 
