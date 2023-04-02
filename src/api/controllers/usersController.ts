@@ -12,6 +12,26 @@ class UsersController {
             return res.status(500).json({ errors: [error.message] });
         }
     }
+
+    async insert(req: Request, res: Response) {
+        try {
+            //const errors: string[] = (req.query.errors as string[]) || [];
+
+            //if (errors.length > 0) {
+            //    return res.status(422).json({ errors });
+            // }
+
+            //if you reached here, it's because in req.body everything is ok!
+            console.log("TESTE", req.body, "TESTE");
+            const result = await usersServices.insert(req.body);
+            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
+
     /* async insert(req: Request, res: Response) {
         try {
             const errors: string[] = (req.query.errors as string[]) || [];

@@ -1,3 +1,6 @@
+//Não adicione rotas nessa classe, tivemos um problema e optamospor adicionar
+// no arquivo router.ts!!!
+
 import express from "express";
 import usersController from "../controllers/usersController";
 //import productCreateValidator from "../validators/product-create-validator";
@@ -9,7 +12,7 @@ class UsersRouter {
         this.router.get("/", usersController.list);
         // this.router.get("/me");
         // this.router.get("/:user_id");
-        // this.router.post("/");
+        // this.router.post("/", usersController.insert);
         // this.router.patch("/:user_id");
         // this.router.delete("/:user_id");
     }

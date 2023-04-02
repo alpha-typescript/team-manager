@@ -20,7 +20,10 @@ export default class ConnectDB {
         return this._pool;
     }
 
-    public async query(command: string, array: Array<string> = []) {
+    public async query(
+        command: string,
+        array: Array<string | boolean | null> = []
+    ) {
         const client = await this._pool.connect();
         try {
             await client.query("BEGIN");

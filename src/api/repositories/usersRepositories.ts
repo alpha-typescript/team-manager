@@ -1,7 +1,8 @@
 import IUser from "../../interfaces/iUser";
 import IResult from "../../interfaces/iResult";
 import ConnectDB from "../database/postgres";
-
+import { v4 as uuidV4 } from "uuid";
+import { QueryResult } from "pg";
 class UserRepositories {
     private db = new ConnectDB();
 
@@ -17,13 +18,53 @@ class UserRepositories {
                     id: userResult.id,
                     username: userResult.username,
                     email: userResult.email,
-                    firstName: userResult.firstName,
-                    lastName: userResult.lastName,
+                    firstName: userResult.first_name,
+                    lastName: userResult.last_name,
                     team: userResult.team,
                     isAdmin: userResult.is_admin,
                 };
                 result.data?.push(user);
             });
+        } catch (error: any) {
+            result.errors?.push(error.message);
+            result.status = 500;
+        }
+
+        return result;
+    }
+
+    public async insert(newUser: IUser): Promise<IResult<IUser>> {
+        const result: IResult<IUser> = { errors: [], status: 200 };
+
+        try {
+            const queryText = `INSERT INTO users (id,username,email,first_name,last_name,password,team,is_admin) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`;
+
+            const values = [
+                uuidV4(),
+                newUser.username || "",
+                newUser.email || "",
+                newUser.firstName || "",
+                newUser.lastName || "",
+                newUser.password || "",
+                newUser.team || null,
+                newUser.isAdmin || false,
+            ];
+            const userResult = await this.db.query(queryText, values);
+            result.data = {};
+
+            if (userResult.length > 0) {
+                const user: IUser = {
+                    id: userResult[0].id,
+                    username: userResult[0].username,
+                    email: userResult[0].email,
+                    firstName: userResult[0].first_name,
+                    lastName: userResult[0].last_name,
+                    team: userResult[0].team,
+                    isAdmin: userResult[0].is_admin,
+                };
+
+                result.data = user;
+            }
         } catch (error: any) {
             result.errors?.push(error.message);
             result.status = 500;

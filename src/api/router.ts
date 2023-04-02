@@ -10,7 +10,7 @@ const router = express.Router();
 
 //users routes
 router.get("/users", usersController.list);
-
+router.post("/users", usersController.insert);
 //teams routes
 router.get("/teams", teamsController.list);
 
@@ -19,3 +19,7 @@ router.get("/teams", teamsController.list);
 // router.delete("/logout", logoutController);
 
 export default router;
+
+//--------
+// ADICIONE ROTAR NESSE ARQUIVO, IGNORE A PASTA ROUTES POR ENQUANTO!!!!
+//--
