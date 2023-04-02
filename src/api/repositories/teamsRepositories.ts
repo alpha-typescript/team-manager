@@ -12,6 +12,8 @@ class TeamsRepositories {
             const teamsResult = await this.db.query(`SELECT * FROM teams`);
             result.data = [];
 
+            if (teamsResult.length === 0) throw new Error("No teams found");
+
             teamsResult.forEach((teamResult) => {
                 const team: ITeam = {
                     id: teamResult.id,

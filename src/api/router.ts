@@ -1,6 +1,8 @@
 import express from "express";
 import usersController from "./controllers/usersController";
 import teamsController from "./controllers/teamsController";
+import loginController from "./controllers/loginController";
+import authenticate from "./middleware/authenticate";
 //import usersRouter from "./routes/usersRoutes";
 // import teamsRouter from "./routes/teamsRoutes";
 // import loginController from "./routes/loginController";
@@ -9,13 +11,13 @@ import teamsController from "./controllers/teamsController";
 const router = express.Router();
 
 //users routes
-router.get("/users", usersController.list);
-router.post("/users", usersController.insert);
+router.get("/users", authenticate, usersController.list);
+router.post("/users", authenticate, usersController.insert);
 //teams routes
-router.get("/teams", teamsController.list);
+router.get("/teams", authenticate, teamsController.list);
 
 //login-logout routes
-// router.post("/login", loginController);
+router.post("/login", loginController.login);
 // router.delete("/logout", logoutController);
 
 export default router;

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import usersServices from "../services/usersServices";
+import IUser from "../../interfaces/iUser";
 
 class UsersController {
     async list(req: Request, res: Response) {
@@ -23,7 +24,18 @@ class UsersController {
 
             //if you reached here, it's because in req.body everything is ok!
             console.log("TESTE", req.body, "TESTE");
-            const result = await usersServices.insert(req.body);
+
+            const newUser: IUser = {
+                id: req.body.id,
+                username: req.body.username,
+                email: req.body.email,
+                firstName: req.body.firsName,
+                lastName: req.body.lastName,
+                team: req.body.team,
+                isAdmin: req.body.isAdmin,
+            };
+
+            const result = await usersServices.insert(newUser);
             console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
