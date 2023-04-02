@@ -13,6 +13,8 @@ class UserRepositories {
             const usersResult = await this.db.query(`SELECT * FROM users`);
             result.data = [];
 
+            if (usersResult.length === 0) throw new Error("No users found");
+
             usersResult.forEach((userResult) => {
                 const user: IUser = {
                     id: userResult.id,
@@ -52,19 +54,19 @@ class UserRepositories {
             const userResult = await this.db.query(queryText, values);
             result.data = {};
 
-            if (userResult.length > 0) {
-                const user: IUser = {
-                    id: userResult[0].id,
-                    username: userResult[0].username,
-                    email: userResult[0].email,
-                    firstName: userResult[0].first_name,
-                    lastName: userResult[0].last_name,
-                    team: userResult[0].team,
-                    isAdmin: userResult[0].is_admin,
-                };
+            if (userResult.length === 0) throw new Error("User not found");
 
-                result.data = user;
-            }
+            const user: IUser = {
+                id: userResult[0].id,
+                username: userResult[0].username,
+                email: userResult[0].email,
+                firstName: userResult[0].first_name,
+                lastName: userResult[0].last_name,
+                team: userResult[0].team,
+                isAdmin: userResult[0].is_admin,
+            };
+
+            result.data = user;
         } catch (error: any) {
             result.errors?.push(error.message);
             result.status = 500;

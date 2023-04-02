@@ -23,8 +23,12 @@
   },
   "homepage": "https://github.com/alpha-typescript/team-manager#readme",
   "dependencies": {
+    "@types/cookie-parser": "^1.4.3",
+    "@types/jsonwebtoken": "^9.0.1",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
     "pg": "^8.10.0",
     "uuid": "^9.0.0"
   },
