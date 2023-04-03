@@ -12,7 +12,6 @@ class TeamsController {
             const user: IUser = payload.user;
 
             const result = await teamsServices.list(user);
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);
@@ -29,7 +28,6 @@ class TeamsController {
                 req.params.team_id,
                 user
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);
@@ -46,7 +44,6 @@ class TeamsController {
                 req.params.team_id,
                 user
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);
@@ -89,7 +86,18 @@ class TeamsController {
                 req.params.user_id,
                 req.params.team_id
             );
-            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
+
+    async update(req: Request, res: Response) {
+        try {
+            const { newName, newLeaderId } = req.body
+
+            const result = await teamsServices.update(req.params.team_id, newName, newLeaderId);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);

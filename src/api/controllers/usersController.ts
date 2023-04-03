@@ -10,7 +10,6 @@ class UsersController {
             const user: IUser = payload.user;
 
             const result = await usersServices.list(user);
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);
@@ -40,7 +39,6 @@ class UsersController {
             };
 
             const result = await usersServices.insert(newUser);
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);
@@ -63,7 +61,6 @@ class UsersController {
             };
 
             const result = await usersServices.patch(patchUser, req.params.user_id);
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);

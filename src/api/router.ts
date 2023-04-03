@@ -24,7 +24,8 @@ router.get(
 );
 router.post("/teams", authenticate, teamsController.insert);
 router.post("/teams/:team_id/member/:user_id", teamsController.addTeamToUser);
-router.delete("/teams/:team_id/member/:user_id", teamsController.removeMember);
+router.patch("/teams/:team_id", authenticate, teamsController.update)
+router.delete("/teams/:team_id/member/:user_id", authenticate, teamsController.removeMember);
 
 //login-logout routes
 router.post("/login", loginController.login);

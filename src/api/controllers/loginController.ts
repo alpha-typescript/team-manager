@@ -13,8 +13,6 @@ class LoginController {
 
             const result = await loginServices.comparePassword(credentials);
 
-            console.log(result);
-
             if (result.status === 200) {
                 const jwt = jwtLib.sign(
                     { user: result.data },
