@@ -6,6 +6,29 @@ import { QueryResult } from "pg";
 class UserRepositories {
     private db = new ConnectDB();
 
+    public async exists(userId: string): Promise<boolean> {
+        const result = await this.db.query(
+            `SELECT EXISTS (SELECT 1 FROM users WHERE id = $1);`,
+            [userId]
+        );
+        return result[0].exists;
+    }
+
+    public async isAdmin(userId: string): Promise<boolean> {
+        const result = await this.db.query(
+            `SELECT is_admin FROM users WHERE id = $1;`,
+            [userId]
+        );
+        return result[0].is_admin;
+    }
+    public async hasAlreadyTeam(userId: string): Promise<boolean> {
+        const result = await this.db.query(
+            `SELECT CASE WHEN team IS NOT NULL THEN true ELSE false END AS has_team FROM users WHERE id = $1;`,
+            [userId]
+        );
+        return result[0].has_team;
+    }
+
     public async list(): Promise<IResult<IUser[]>> {
         const result: IResult<IUser[]> = { errors: [], status: 200 };
 
@@ -54,7 +77,8 @@ class UserRepositories {
             const userResult = await this.db.query(queryText, values);
             result.data = {};
 
-            if (userResult.length === 0) throw new Error("User not found");
+            if (userResult.length === 0)
+                throw new Error("User was not created");
 
             const user: IUser = {
                 id: userResult[0].id,
@@ -75,7 +99,10 @@ class UserRepositories {
         return result;
     }
 
-    public async insertUser(teamId: string, userId: string): Promise<IResult<IUser>> {
+    public async insertUser(
+        teamId: string,
+        userId: string
+    ): Promise<IResult<IUser>> {
         const result: IResult<IUser> = { errors: [], status: 200 };
 
         console.log(teamId, userId);
@@ -130,7 +157,7 @@ class UserRepositories {
                 User.firstName || "",
                 User.lastName || "",
                 User.password || "",
-                User.id || ""
+                User.id || "",
             ];
             const userResult = await this.db.query(queryText, values);
             result.data = {};
