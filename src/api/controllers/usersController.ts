@@ -20,11 +20,11 @@ class UsersController {
 
     async insert(req: Request, res: Response) {
         try {
-            //const errors: string[] = (req.query.errors as string[]) || [];
+            const errors: string[] = (req.query.errors as string[]) || [];
 
-            //if (errors.length > 0) {
-            //    return res.status(422).json({ errors });
-            // }
+            if (errors.length > 0) {
+                return res.status(422).json({ errors });
+            }
 
             //if you reached here, it's because in req.body everything is ok!
             console.log("TESTE", req.body, "TESTE");
