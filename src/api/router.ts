@@ -3,6 +3,7 @@ import usersController from "./controllers/usersController";
 import teamsController from "./controllers/teamsController";
 import loginController from "./controllers/loginController";
 import authenticate from "./middleware/authenticate";
+import patchUserValidator from "./validators/PatchUserValidator";
 //import usersRouter from "./routes/usersRoutes";
 // import teamsRouter from "./routes/teamsRoutes";
 // import loginController from "./routes/loginController";
@@ -13,7 +14,7 @@ const router = express.Router();
 //users routes
 router.get("/users", authenticate, usersController.list);
 router.post("/users", authenticate, usersController.insert);
-router.patch("/users/:user_id", authenticate, usersController.updateUser);
+router.patch("/users/:user_id", authenticate, patchUserValidator, usersController.updateUser);
 //teams routes
 router.get("/teams", authenticate, teamsController.list);
 router.get("/teams/:team_id", authenticate, teamsController.getTeam);

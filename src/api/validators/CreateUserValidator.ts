@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Validator from "./validator";
 
-export default function createValidator(
+export default function createUserValidator(
   req: Request,
   res: Response,
   next: NextFunction

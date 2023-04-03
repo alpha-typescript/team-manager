@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Validator from "./validator";
 
-export default function createValidator(
+export default function patchTeamValidator(
   req: Request,
   res: Response,
   next: NextFunction
