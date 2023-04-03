@@ -12,12 +12,15 @@ class TeamsServices {
                 throw new Error("User doesn't have permission");
             }
         } catch (error: any) {
-            result.errors?.push(error.message);
-            if (error.message === "User doesn't have permission") {
-                result.status === 401;
-            } else {
-                result.status = 500;
+            switch (error.message) {
+                case "User doesn't have permission":
+                    result.status = 401;
+                    break;
+                default:
+                    result.status = 500;
+                    break;
             }
+            result.errors?.push(error.message);
         }
         return result;
     }
@@ -25,19 +28,55 @@ class TeamsServices {
     async getTeam(teamId: string, user: IUser): Promise<IResult<ITeam>> {
         let result: IResult<ITeam> = { errors: [], status: 200 };
         try {
-            const team = await teamsRepositories.find(teamId);
-            if (user.isAdmin || user.isLeader || user.team === team.data?.id) {
-                result = team;
+            if (!(await teamsRepositories.exists(teamId)))
+                throw new Error("Team does not exist");
+
+            if (user.isAdmin || user.isLeader || user.team === teamId) {
+                result = await teamsRepositories.find(teamId);
             } else {
                 throw new Error("User doesn't have permission");
             }
         } catch (error: any) {
-            result.errors?.push(error.message);
-            if (error.message === "User doesn't have permission") {
-                result.status === 401;
-            } else {
-                result.status = 500;
+            switch (error.message) {
+                case "User doesn't have permission":
+                    result.status = 401;
+                    break;
+                case "Team does not exist":
+                    result.status = 404;
+                    break;
+                default:
+                    result.status = 500;
+                    break;
             }
+            result.errors?.push(error.message);
+        }
+        return result;
+    }
+
+    async listMembers(teamId: string, user: IUser): Promise<IResult<IUser[]>> {
+        let result: IResult<IUser[]> = { errors: [], status: 200 };
+        try {
+            if (!(await teamsRepositories.exists(teamId)))
+                throw new Error("Team does not exist");
+
+            if (user.isAdmin || user.isLeader || user.team === teamId) {
+                result = await teamsRepositories.members(teamId);
+            } else {
+                throw new Error("User doesn't have permission");
+            }
+        } catch (error: any) {
+            switch (error.message) {
+                case "User doesn't have permission":
+                    result.status = 401;
+                    break;
+                case "Team does not exist":
+                    result.status = 404;
+                    break;
+                default:
+                    result.status = 500;
+                    break;
+            }
+            result.errors?.push(error.message);
         }
         return result;
     }
