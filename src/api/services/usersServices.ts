@@ -41,7 +41,7 @@ class UsersServices {
                 throw new Error("Team does not exist");
 
             if (user.isAdmin || user.isLeader) {
-                result = await userRepositories.insertUser(teamId, userId);
+                result = await teamsRepositories.insertUser(teamId, userId);
             } else {
                 throw new Error("User doesn't have permission");
             }

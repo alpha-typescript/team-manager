@@ -96,6 +96,24 @@ class TeamsController {
             return res.status(500).json({ errors: [error.message] });
         }
     }
+
+    async addTeamToUser(req: Request, res: Response) {
+        try {
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const user: IUser = payload.user;
+
+            const result = await teamsServices.addUser(
+                req.params.team_id,
+                req.params.user_id,
+                user
+            );
+            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
 }
 
 const teamsController = new TeamsController();
