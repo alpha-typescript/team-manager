@@ -197,6 +197,37 @@ class TeamsServices {
         return result;
     }
 
+
+    async addUser(teamId: string, userId: string, user: IUser): Promise<IResult<IUser>> {
+        let result: IResult<IUser> = { errors: [], status: 200 };
+
+        try {
+            if (!(await teamsRepositories.exists(teamId)))
+                throw new Error("Team does not exist");
+
+            if (user.isAdmin || user.isLeader) {
+                result = await teamsRepositories.insertUser(teamId, userId);
+            } else {
+                throw new Error("User doesn't have permission");
+            }
+        } catch (error: any) {
+            switch (error.message) {
+                case "User doesn't have permission":
+                    result.status = 401;
+                    break;
+                case "Team does not exist":
+                    result.status = 404;
+                    break;
+                default:
+                    result.status = 500;
+                    break;
+            }
+            result.errors?.push(error.message);
+        }
+        return result;
+    }
+
+
     async update(teamId: string, newName: string, newLeaderId: string): Promise<IResult<IUser[]>> {
         let result: IResult<IUser[]> = { errors: [], status: 200 };
         try {

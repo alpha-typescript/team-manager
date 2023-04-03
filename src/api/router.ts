@@ -23,13 +23,13 @@ router.get(
     teamsController.listMembers
 );
 router.post("/teams", authenticate, teamsController.insert);
-router.post("/teams/:team_id/member/:user_id", usersController.addTeamToUser);
+router.post("/teams/:team_id/member/:user_id", teamsController.addTeamToUser);
 router.patch("/teams/:team_id", authenticate, teamsController.update)
-router.delete("/teams/:team_id/member/:user_id", authenticate, teamsController.removeMember)
+router.delete("/teams/:team_id/member/:user_id", authenticate, teamsController.removeMember);
 
 //login-logout routes
 router.post("/login", loginController.login);
-// router.delete("/logout", logoutController);
+router.delete("/logout", loginController.logout);
 
 export default router;
 
