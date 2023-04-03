@@ -5,13 +5,13 @@ export default class Validator {
     let errors: string[] = [];
 
     if (data === undefined || data === null) {
-      errors.push(`[data is required`);
+      errors.push(`data is required`);
       return errors;
     }
 
     const emailRegex = /^(\w{1,}@\w{1,}\.(\w{3})(\.\w{2}){0,1})$/gim;
     if (!emailRegex.test(data)) {
-      errors.push(`[Invalid email`);
+      errors.push(`Invalid email`);
     }
 
     return errors;
@@ -27,7 +27,7 @@ export default class Validator {
 
     const passwordRegex = /^\w{1,}$/gim;
     if (!passwordRegex.test(data)) {
-      errors.push(`[Invalid password`);
+      errors.push(`Invalid password`);
     }
 
     return errors;
@@ -37,13 +37,13 @@ export default class Validator {
     let errors: string[] = [];
 
     if (data === undefined || data === null) {
-      errors.push(`[data is required`);
+      errors.push(`data is required`);
       return errors;
     }
 
     const nameRegex = /^[a-z]{1,}$/gim;
     if (!nameRegex.test(data)) {
-      errors.push(`[Invalid name`);
+      errors.push(`Invalid name`);
     }
 
     return errors;
@@ -53,12 +53,12 @@ export default class Validator {
     let errors: string[] = [];
 
     if (data === undefined || data === null) {
-      errors.push(`[data is required`);
+      errors.push(`data is required`);
       return errors;
     }
 
     if (typeof data != "boolean") {
-      errors.push(`[Invalid Bool`);
+      errors.push(`Invalid Bool`);
     }
 
     return errors;
@@ -68,12 +68,12 @@ export default class Validator {
     let errors: string[] = [];
 
     if (data === undefined || data === null) {
-      errors.push(`[data is required`);
+      errors.push(`data is required`);
       return errors;
     }
 
     if (!validate(data) || version(data) !== 4) {
-      errors.push(`[id is not uuid v4`);
+      errors.push(`id is not uuid v4`);
     }
 
     return errors;

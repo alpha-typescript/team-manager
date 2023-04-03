@@ -4,6 +4,7 @@ import teamsController from "./controllers/teamsController";
 import loginController from "./controllers/loginController";
 import authenticate from "./middleware/authenticate";
 import patchUserValidator from "./validators/PatchUserValidator";
+import AddTeamToUserValidator from "./validators/AddTeamToUserValidator";
 //import usersRouter from "./routes/usersRoutes";
 // import teamsRouter from "./routes/teamsRoutes";
 // import loginController from "./routes/loginController";
@@ -23,7 +24,7 @@ router.get(
     authenticate,
     teamsController.listMembers
 );
-router.post("/teams/:team_id/member/:user_id", usersController.addTeamToUser);
+router.post("/teams/:team_id/member/:user_id", authenticate, AddTeamToUserValidator, usersController.addTeamToUser);
 
 //login-logout routes
 router.post("/login", loginController.login);
