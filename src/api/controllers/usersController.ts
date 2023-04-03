@@ -1,11 +1,15 @@
 import { Request, Response } from "express";
+import jwtLib, { JwtPayload } from "jsonwebtoken";
 import usersServices from "../services/usersServices";
 import IUser from "../../interfaces/iUser";
 
 class UsersController {
     async list(req: Request, res: Response) {
         try {
-            const result = await usersServices.list();
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const user: IUser = payload.user;
+
+            const result = await usersServices.list(user);
             console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
