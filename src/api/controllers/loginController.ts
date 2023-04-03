@@ -6,6 +6,12 @@ import ILogin from "../../interfaces/iLogin";
 class LoginController {
     async login(req: Request, res: Response) {
         try {
+            const errors: string[] = (req.query.errors as string[]) || [];
+
+            if (errors.length > 0) {
+                return res.status(422).json({ errors });
+            }
+
             const credentials: ILogin = {
                 username: req.body.username,
                 password: req.body.password,
