@@ -77,6 +77,7 @@ class UsersController {
                 email: req.body.email || user.email,
                 firstName: req.body.firstName || user.firstName,
                 lastName: req.body.lastName || user.lastName,
+                password: req.body.password || user.password
             };
 
             const result = await usersServices.patch(patchUser, req.params.user_id);
