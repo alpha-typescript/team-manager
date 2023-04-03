@@ -16,6 +16,8 @@ const router = express.Router();
 
 //users routes
 router.get("/users", authenticate, usersController.list);
+router.get("/users/:user_id", authenticate, usersController.getUser);
+router.delete("/users/:user_id", authenticate, usersController.deleteUser);
 router.post("/users", authenticate, UserValidator, usersController.insert);
 router.patch("/users/:user_id", authenticate, UserValidator, usersController.updateUser);
 //teams routes

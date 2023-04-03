@@ -74,6 +74,37 @@ class UsersController {
         }
     }
 
+    async getUser(req: Request, res: Response) {
+        try {
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const user: IUser = payload.user;
+            const result = await usersServices.getUser(
+                user,
+                req.params.user_id
+            );
+            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
+//verificar se é administrador ou lider
+//adm pode ver tudo e o lider pode ver dados de outras equipes e lideres
+    async deleteUser(req: Request, res: Response) {
+        try {
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const user: IUser = payload.user;
+            const result = await usersServices.deleteUser(user, req.params.user_id);
+            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
+
+
     /* async insert(req: Request, res: Response) {
         try {
             const errors: string[] = (req.query.errors as string[]) || [];
