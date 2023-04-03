@@ -9,6 +9,7 @@ export default function patchUserValidator(
   let errors: string[] = (req.query.errors as string[]) || [];
   const { username, firstName, lastName, email, password, squad, isAdmin } =
     req.body;
+
   if (username) {
     errors = [...errors, ...Validator.isValidName(username)];
   }
