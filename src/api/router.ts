@@ -13,6 +13,7 @@ const router = express.Router();
 //users routes
 router.get("/users", authenticate, usersController.list);
 router.post("/users", authenticate, usersController.insert);
+router.patch("/users/:user_id", authenticate, usersController.updateUser);
 //teams routes
 router.get("/teams", authenticate, teamsController.list);
 router.get("/teams/:team_id", authenticate, teamsController.getTeam);
@@ -21,6 +22,7 @@ router.get(
     authenticate,
     teamsController.listMembers
 );
+router.post("/teams/:team_id/member/:user_id", usersController.addTeamToUser);
 
 //login-logout routes
 router.post("/login", loginController.login);

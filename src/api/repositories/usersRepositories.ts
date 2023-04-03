@@ -75,6 +75,86 @@ class UserRepositories {
         return result;
     }
 
+    public async insertUser(teamId: string, userId: string): Promise<IResult<IUser>> {
+        const result: IResult<IUser> = { errors: [], status: 200 };
+
+        console.log(teamId, userId);
+
+        try {
+            const userResult = await this.db.query(
+                `
+                UPDATE users SET 
+                team = $1
+                WHERE id = $2
+                RETURNING *
+                `,
+                [teamId, userId]
+            );
+
+            const user: IUser = {
+                id: userResult[0].id,
+                username: userResult[0].username,
+                email: userResult[0].email,
+                firstName: userResult[0].first_name,
+                lastName: userResult[0].last_name,
+                team: userResult[0].team,
+                isAdmin: userResult[0].is_admin,
+            };
+
+            result.data = user;
+        } catch (error: any) {
+            result.errors?.push(error.message);
+            result.status = 500;
+        }
+
+        return result;
+    }
+
+    public async patch(User: IUser): Promise<IResult<IUser>> {
+        const result: IResult<IUser> = { errors: [], status: 200 };
+
+        try {
+            const queryText = `
+            UPDATE users SET 
+            username = $1, 
+            email = $2, 
+            first_name = $3, 
+            last_name = $4, 
+            password = $5 
+            WHERE id = $6
+            RETURNING *`;
+
+            const values = [
+                User.username || "",
+                User.email || "",
+                User.firstName || "",
+                User.lastName || "",
+                User.password || "",
+                User.id || ""
+            ];
+            const userResult = await this.db.query(queryText, values);
+            result.data = {};
+
+            if (userResult.length === 0) throw new Error("User not found");
+
+            const user: IUser = {
+                id: userResult[0].id,
+                username: userResult[0].username,
+                email: userResult[0].email,
+                firstName: userResult[0].first_name,
+                lastName: userResult[0].last_name,
+                team: userResult[0].team,
+                isAdmin: userResult[0].is_admin,
+            };
+
+            result.data = user;
+        } catch (error: any) {
+            result.errors?.push(error.message);
+            result.status = 500;
+        }
+
+        return result;
+    }
     /* async insert(pool: pg.Pool, product: IProduct): Promise<IResult<IProduct>> {
         const iresult: IResult<IProduct> = { errors: [], status: 200 };
         try {
