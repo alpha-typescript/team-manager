@@ -16,6 +16,11 @@ router.post("/users", authenticate, usersController.insert);
 //teams routes
 router.get("/teams", authenticate, teamsController.list);
 router.get("/teams/:team_id", authenticate, teamsController.getTeam);
+router.get(
+    "/teams/:team_id/members",
+    authenticate,
+    teamsController.listMembers
+);
 
 //login-logout routes
 router.post("/login", loginController.login);
