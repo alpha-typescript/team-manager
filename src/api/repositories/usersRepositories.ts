@@ -21,6 +21,16 @@ class UserRepositories {
         );
         return result[0].is_admin;
     }
+
+    public async isLeader(userId: string): Promise<boolean> {
+        const result = await this.db.query(
+            `SELECT EXISTS (SELECT 1 FROM teams WHERE leader = $1);`,
+            [userId]
+        );
+        
+        return result[0].exists;
+    }
+
     public async hasAlreadyTeam(userId: string): Promise<boolean> {
         const result = await this.db.query(
             `SELECT CASE WHEN team IS NOT NULL THEN true ELSE false END AS has_team FROM users WHERE id = $1;`,
@@ -104,8 +114,6 @@ class UserRepositories {
         userId: string
     ): Promise<IResult<IUser>> {
         const result: IResult<IUser> = { errors: [], status: 200 };
-
-        console.log(teamId, userId);
 
         try {
             const userResult = await this.db.query(

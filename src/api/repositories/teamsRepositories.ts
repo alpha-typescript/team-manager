@@ -14,6 +14,14 @@ class TeamsRepositories {
         return result[0].exists;
     }
 
+    public async hasMember(teamId: string, userId: string): Promise<boolean> {
+        const result = await this.db.query(
+            `SELECT EXISTS (SELECT 1 FROM users WHERE team = $1 AND id = $2);`,
+            [teamId, userId]
+        );
+        return result[0].exists;
+    }
+
     public async list(): Promise<IResult<ITeam[]>> {
         const result: IResult<ITeam[]> = { errors: [], status: 200 };
 
@@ -168,6 +176,45 @@ class TeamsRepositories {
             }
 
             result.data = removeResult;
+        } catch (error: any) {
+            result.errors?.push(error.message);
+            result.status = 500;
+        }
+
+        return result;
+    }
+
+    public async update(teamId: string, newName: string | null, newLeaderId: string | null): Promise<IResult<IUser[]>> {
+        const result: IResult<IUser[]> = { errors: [], status: 200 };
+
+        try {
+            if(newName) {
+                const query = `
+                    UPDATE 
+                        teams 
+                    SET 
+                        name = $1
+                    WHERE
+                        id = $2
+                    `
+                await this.db.query(query, [newName, teamId]);
+            }
+
+            if(newLeaderId) {
+                const query = `
+                    UPDATE 
+                        teams 
+                    SET 
+                        leader = $1
+                    WHERE
+                        id = $2
+                    `
+                await this.db.query(query, [newLeaderId, teamId]);
+            }
+
+            const updateResult = await this.db.query("SELECT * FROM teams WHERE id = $1", [teamId])
+
+            result.data = updateResult;
         } catch (error: any) {
             result.errors?.push(error.message);
             result.status = 500;
