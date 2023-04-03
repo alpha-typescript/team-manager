@@ -50,6 +50,20 @@ class TeamsController {
             return res.status(500).json({ errors: [error.message] });
         }
     }
+
+    async removeMember(req: Request, res: Response) {
+        try {
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const adminUser: IUser = payload.user;
+
+            const result = await teamsServices.removeMember(adminUser, req.params.user_id, req.params.team_id);
+            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
 }
 
 const teamsController = new TeamsController();

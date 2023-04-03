@@ -97,6 +97,34 @@ class TeamsRepositories {
 
         return result;
     }
+
+    public async removeMember(memberId: string, teamId: string): Promise<IResult<IUser[]>> {
+        const result: IResult<IUser[]> = { errors: [], status: 200 };
+
+        try {
+            const query = `
+                UPDATE users
+                    set team = null
+                WHERE
+                    users.id = $1
+                AND
+                    users.team = $2
+                RETURNING 
+                    *`
+            const removeResult = await this.db.query(query, [memberId, teamId]);
+
+            if (removeResult.length == 0) {
+                throw new Error("This user is not a member of this team")
+            }
+
+            result.data = removeResult;
+        } catch (error: any) {
+            result.errors?.push(error.message);
+            result.status = 500;
+        }
+
+        return result;
+    }
 }
 
 const teamsRepositories = new TeamsRepositories();
