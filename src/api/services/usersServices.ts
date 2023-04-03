@@ -24,8 +24,17 @@ class UsersServices {
     async getUser(user: IUser, userId: string): Promise<IResult<IUser>> {
         let result: IResult<IUser> = { errors: [], status: 200 };
         try {
-            if (user.isAdmin) {
-                result = await userRepositories.getUser(userId);
+            const userResult: IResult<IUser> = await userRepositories.getUser(
+                userId
+            );
+            const isLeader: boolean = await userRepositories.isLeader(userId); //checking if the requested user is the leader of a team
+
+            if (
+                user.isAdmin ||
+                userResult.data?.team === user.team ||
+                (user.isLeader && isLeader)
+            ) {
+                result = userResult;
             } else {
                 throw new Error("User doesn't have permission");
             }
@@ -42,13 +51,8 @@ class UsersServices {
     async deleteUser(user: IUser, userId: string): Promise<IResult<IUser>> {
         let result: IResult<IUser> = { errors: [], status: 200 };
         try {
-            const userDeleted = await userRepositories.getUser(userId);
-            if (!(userDeleted))
-                throw new Error("User does not exist");
-
-            if (user.isAdmin || ( user.isLeader && userDeleted.data?.team == user.team)) {
+            if (user.isAdmin) {
                 result = await userRepositories.deleteUser(userId);
-                result.data = userDeleted.data;
             } else {
                 throw new Error("User doesn't have permission");
             }
@@ -57,7 +61,7 @@ class UsersServices {
                 case "User doesn't have permission":
                     result.status = 401;
                     break;
-                case "Team does not exist":
+                case "User not found":
                     result.status = 404;
                     break;
                 default:
@@ -80,7 +84,11 @@ class UsersServices {
         return result;
     }
 
-    async addUser(teamId: string, userId: string, user: IUser): Promise<IResult<IUser>> {
+    async addUser(
+        teamId: string,
+        userId: string,
+        user: IUser
+    ): Promise<IResult<IUser>> {
         let result: IResult<IUser> = { errors: [], status: 200 };
 
         try {
@@ -108,7 +116,6 @@ class UsersServices {
         }
         return result;
     }
-
 
     async patch(user: IUser, userId: string): Promise<IResult<IUser>> {
         let result: IResult<IUser> = { errors: [], status: 200 };
