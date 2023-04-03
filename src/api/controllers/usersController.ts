@@ -48,30 +48,6 @@ class UsersController {
         }
     }
 
-    async addTeamToUser(req: Request, res: Response) {
-        try {
-            const errors: string[] = (req.query.errors as string[]) || [];
-
-            if (errors.length > 0) {
-                return res.status(422).json({ errors });
-            }
-
-            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
-            const user: IUser = payload.user;
-
-            const result = await usersServices.addUser(
-                req.params.team_id,
-                req.params.user_id,
-                user
-            );
-            console.log(result);
-            return res.status(result.status || 500).json(result);
-        } catch (error: any) {
-            console.log(error.message);
-            return res.status(500).json({ errors: [error.message] });
-        }
-    }
-
     async updateUser(req: Request, res: Response) {
         try {
             const errors: string[] = (req.query.errors as string[]) || [];
@@ -89,6 +65,7 @@ class UsersController {
                 email: req.body.email || user.email,
                 firstName: req.body.firstName || user.firstName,
                 lastName: req.body.lastName || user.lastName,
+                password: req.body.password || user.password
             };
 
             const result = await usersServices.patch(patchUser, req.params.user_id);

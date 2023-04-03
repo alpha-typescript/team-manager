@@ -36,14 +36,12 @@ class UsersServices {
     async addUser(teamId: string, userId: string, user: IUser): Promise<IResult<IUser>> {
         let result: IResult<IUser> = { errors: [], status: 200 };
 
-        console.log(teamId);
-
         try {
             if (!(await teamsRepositories.exists(teamId)))
                 throw new Error("Team does not exist");
 
             if (user.isAdmin || user.isLeader) {
-                result = await userRepositories.insertUser(teamId, userId);
+                result = await teamsRepositories.insertUser(teamId, userId);
             } else {
                 throw new Error("User doesn't have permission");
             }

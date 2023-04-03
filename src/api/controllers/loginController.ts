@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
-import jwtLib from "jsonwebtoken";
+import jwtLib, { JwtPayload } from "jsonwebtoken";
 import loginServices from "../services/loginServices";
 import ILogin from "../../interfaces/iLogin";
 
 class LoginController {
     async login(req: Request, res: Response) {
         try {
-            //console.log("TESTE", req.body, "TESTE");
-
             const credentials: ILogin = {
                 username: req.body.username,
                 password: req.body.password,
@@ -29,6 +27,23 @@ class LoginController {
             }
 
             return res.status(result.status || 500).json(result.errors);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
+
+    async logout(req: Request, res: Response) {
+        try {
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const username: string = payload.user.username;
+
+            res.clearCookie("session");
+            return res
+                .status(200)
+                .json({
+                    message: `User '${username}' logged out successfully`,
+                });
         } catch (error: any) {
             console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
