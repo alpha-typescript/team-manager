@@ -48,6 +48,46 @@ class UsersController {
         }
     }
 
+    async addTeamToUser(req: Request, res: Response) {
+        try {
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const user: IUser = payload.user;
+
+            const result = await usersServices.addUser(
+                req.params.team_id,
+                req.params.user_id,
+                user
+            );
+            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
+
+    async updateUser(req: Request, res: Response) {
+        try {
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const user: IUser = payload.user;
+
+            const patchUser: IUser = {
+                id: user.id,
+                username: req.body.username || user.username,
+                email: req.body.email || user.email,
+                firstName: req.body.firstName || user.firstName,
+                lastName: req.body.lastName || user.lastName,
+            };
+
+            const result = await usersServices.patch(patchUser, req.params.user_id);
+            console.log(result);
+            return res.status(result.status || 500).json(result);
+        } catch (error: any) {
+            console.log(error.message);
+            return res.status(500).json({ errors: [error.message] });
+        }
+    }
+
     /* async insert(req: Request, res: Response) {
         try {
             const errors: string[] = (req.query.errors as string[]) || [];
