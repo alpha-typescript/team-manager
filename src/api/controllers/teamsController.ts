@@ -99,6 +99,13 @@ class TeamsController {
 
     async addTeamToUser(req: Request, res: Response) {
         try {
+
+            const errors: string[] = (req.query.errors as string[]) || [];
+
+            if (errors.length > 0) {
+                return res.status(422).json({ errors });
+            }
+
             const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
             const user: IUser = payload.user;
 
