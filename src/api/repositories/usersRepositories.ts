@@ -27,7 +27,7 @@ class UserRepositories {
             `SELECT EXISTS (SELECT 1 FROM teams WHERE leader = $1);`,
             [userId]
         );
-        
+
         return result[0].exists;
     }
 
@@ -112,7 +112,7 @@ class UserRepositories {
     public async getUser(userId: string): Promise<IResult<IUser>> {
         const result: IResult<IUser> = { errors: [], status: 200 };
 
-        console.log( userId);
+        console.log(userId);
 
         try {
             const userResult = await this.db.query(
@@ -122,7 +122,7 @@ class UserRepositories {
                 [userId]
             );
 
-            if (userResult.length === 0) throw new Error ("User not found");
+            if (userResult.length === 0) throw new Error("User not found");
 
             const user: IUser = {
                 id: userResult[0].id,
@@ -146,16 +146,30 @@ class UserRepositories {
     public async deleteUser(userId: string): Promise<IResult<IUser>> {
         const result: IResult<IUser> = { errors: [], status: 200 };
 
-        console.log( userId);
+        console.log(userId);
 
         try {
             const userResult = await this.db.query(
                 `
                 DELETE FROM users WHERE id = $1
+                RETURNING *;
                 `,
                 [userId]
             );
 
+            if (userResult.length === 0) throw new Error("User not found");
+
+            const user: IUser = {
+                id: userResult[0].id,
+                username: userResult[0].username,
+                email: userResult[0].email,
+                firstName: userResult[0].first_name,
+                lastName: userResult[0].last_name,
+                team: userResult[0].team,
+                isAdmin: userResult[0].is_admin,
+            };
+
+            result.data = user;
         } catch (error: any) {
             result.errors?.push(error.message);
             result.status = 500;
