@@ -2,7 +2,6 @@ import ITeam from "../../interfaces/iTeam";
 import IResult from "../../interfaces/iResult";
 import ConnectDB from "../database/postgres";
 import IUser from "../../interfaces/iUser";
-import { v4 as uuidV4 } from "uuid";
 
 class TeamsRepositories {
     private db = new ConnectDB();
@@ -110,7 +109,7 @@ class TeamsRepositories {
             `;
 
             const insertTeamValues = [
-                uuidV4(),
+                newTeam.id || null,
                 newTeam.name || null,
                 newTeam.leader || null,
             ];
@@ -140,6 +139,35 @@ class TeamsRepositories {
             };
 
             result.data = team;
+        } catch (error: any) {
+            result.errors?.push(error.message);
+            result.status = 500;
+        }
+        return result;
+    }
+    public async removeMember(
+        memberId: string,
+        teamId: string
+    ): Promise<IResult<IUser[]>> {
+        const result: IResult<IUser[]> = { errors: [], status: 200 };
+
+        try {
+            const query = `
+                UPDATE users
+                    set team = null
+                WHERE
+                    users.id = $1
+                AND
+                    users.team = $2
+                RETURNING 
+                    *`;
+            const removeResult = await this.db.query(query, [memberId, teamId]);
+
+            if (removeResult.length == 0) {
+                throw new Error("This user is not a member of this team");
+            }
+
+            result.data = removeResult;
         } catch (error: any) {
             result.errors?.push(error.message);
             result.status = 500;

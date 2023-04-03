@@ -146,7 +146,49 @@ class TeamsServices {
                 case "[field 'leader'] this user has already a team, so can not be a leader":
                     result.status = 403; //coloquei 403 mas preciso verificar se corresponde mesmo
                     break;
+                default:
+                    result.status = 500;
+                    break;
+            }
+            result.errors?.push(error.message);
+        }
+        return result;
+    }
+    async removeMember(
+        adminUser: IUser,
+        commonUser: string,
+        teamId: string
+    ): Promise<IResult<IUser[]>> {
+        let result: IResult<IUser[]> = { errors: [], status: 200 };
+        try {
+            if (adminUser.id == commonUser) {
+                throw new Error("A leader can't remove itself from a team");
+            }
 
+            // validar se o usuário é admin ou n
+            // if (await userRepository.getUser(commonUser).isAdmin) {
+            //     throw new Error("You can't remove a leader from a team")
+            // }
+
+            if (!commonUser) {
+                throw new Error("No user ID found");
+            }
+
+            result = await teamsRepositories.removeMember(commonUser, teamId);
+        } catch (error: any) {
+            switch (error.message) {
+                case "No user ID found":
+                    result.status = 400;
+                    break;
+                case "A leader can't remove itself from a team":
+                    result.status = 403;
+                    break;
+                case "You can't remove a leader from a team":
+                    result.status = 403;
+                    break;
+                case "This user is not a member of this team":
+                    result.status = 400;
+                    break;
                 default:
                     result.status = 500;
                     break;

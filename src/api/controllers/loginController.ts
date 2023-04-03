@@ -6,8 +6,6 @@ import ILogin from "../../interfaces/iLogin";
 class LoginController {
     async login(req: Request, res: Response) {
         try {
-            //console.log("TESTE", req.body, "TESTE");
-
             const credentials: ILogin = {
                 username: req.body.username,
                 password: req.body.password,
