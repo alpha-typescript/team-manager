@@ -288,7 +288,7 @@ class TeamsServices {
         try {
             const membersResult = (await teamsRepositories.members(teamId))
                 .data as IUser[]; //check if team has members
-            if (user.isAdmin && membersResult.length === 0) {
+            if (user.isAdmin && membersResult.length <= 1) {
                 result = await teamsRepositories.deleteTeam(teamId);
             } else {
                 throw new Error("User doesn't have permission");
