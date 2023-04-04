@@ -3,22 +3,24 @@ import router from "./api/router"; // add later
 import cookieParser from "cookie-parser";
 import { config } from "dotenv";
 config({ path: "config/.env" }); // cool, thanks chatGPT
-
+import swaggerDocument from "./docs/swagger.json";
+import swaggerUi from "swagger-ui-express";
 export default class App {
-    public server: express.Application;
+  public server: express.Application;
 
-    constructor() {
-        this.server = express();
-        this.middleware();
-        this.router();
-    }
+  constructor() {
+    this.server = express();
+    this.middleware();
+    this.router();
+  }
 
-    private middleware() {
-        this.server.use(express.json());
-        this.server.use(cookieParser(process.env.JWTSECRET || "senha secreta"));
-    }
+  private middleware() {
+    this.server.use(express.json());
+    this.server.use(cookieParser(process.env.JWTSECRET || "senha secreta"));
+    this.server.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  }
 
-    private router() {
-        this.server.use(router);
-    }
+  private router() {
+    this.server.use(router);
+  }
 }
