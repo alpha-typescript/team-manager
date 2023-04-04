@@ -184,7 +184,6 @@ class TeamsRepositories {
         return result;
     }
 
-
     public async insertUser(
         teamId: string,
         userId: string
@@ -223,11 +222,15 @@ class TeamsRepositories {
         return result;
     }
 
-    public async update(teamId: string, newName: string | null, newLeaderId: string | null): Promise<IResult<IUser[]>> {
+    public async update(
+        teamId: string,
+        newName: string | null,
+        newLeaderId: string | null
+    ): Promise<IResult<IUser[]>> {
         const result: IResult<IUser[]> = { errors: [], status: 200 };
 
         try {
-            if(newName) {
+            if (newName) {
                 const query = `
                     UPDATE 
                         teams 
@@ -235,11 +238,11 @@ class TeamsRepositories {
                         name = $1
                     WHERE
                         id = $2
-                    `
+                    `;
                 await this.db.query(query, [newName, teamId]);
             }
 
-            if(newLeaderId) {
+            if (newLeaderId) {
                 const query = `
                     UPDATE 
                         teams 
@@ -247,13 +250,44 @@ class TeamsRepositories {
                         leader = $1
                     WHERE
                         id = $2
-                    `
+                    `;
                 await this.db.query(query, [newLeaderId, teamId]);
             }
 
-            const updateResult = await this.db.query("SELECT * FROM teams WHERE id = $1", [teamId])
+            const updateResult = await this.db.query(
+                "SELECT * FROM teams WHERE id = $1",
+                [teamId]
+            );
 
             result.data = updateResult;
+        } catch (error: any) {
+            result.errors?.push(error.message);
+            result.status = 500;
+        }
+
+        return result;
+    }
+
+    public async deleteTeam(teamId: string): Promise<IResult<ITeam>> {
+        const result: IResult<ITeam> = { errors: [], status: 200 };
+        try {
+            const teamResult = await this.db.query(
+                `
+                DELETE FROM teams WHERE id = $1
+                RETURNING *;
+                `,
+                [teamId]
+            );
+
+            if (teamResult.length === 0) throw new Error("Team not found");
+
+            const team: ITeam = {
+                id: teamResult[0].id,
+                name: teamResult[0].name,
+                leader: teamResult[0].leader,
+            };
+
+            result.data = team;
         } catch (error: any) {
             result.errors?.push(error.message);
             result.status = 500;

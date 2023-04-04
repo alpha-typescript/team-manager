@@ -146,8 +146,6 @@ class UserRepositories {
     public async deleteUser(userId: string): Promise<IResult<IUser>> {
         const result: IResult<IUser> = { errors: [], status: 200 };
 
-        console.log(userId);
-
         try {
             const userResult = await this.db.query(
                 `
