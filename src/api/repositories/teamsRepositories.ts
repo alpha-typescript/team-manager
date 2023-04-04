@@ -273,6 +273,7 @@ class TeamsRepositories {
         try {
             const teamResult = await this.db.query(
                 `
+                UPDATE users SET team = null WHERE team = $1;
                 DELETE FROM teams WHERE id = $1
                 RETURNING *;
                 `,
