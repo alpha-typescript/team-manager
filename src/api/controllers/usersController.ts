@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import jwtLib, { JwtPayload } from "jsonwebtoken";
 import usersServices from "../services/usersServices";
 import IUser from "../../interfaces/iUser";
+import IResult from "../../interfaces/iResult";
 
 class UsersController {
     async list(req: Request, res: Response) {
@@ -63,10 +64,13 @@ class UsersController {
                 email: req.body.email || user.email,
                 firstName: req.body.firstName || user.firstName,
                 lastName: req.body.lastName || user.lastName,
-                password: req.body.password || user.password
+                password: req.body.password || user.password,
             };
 
-            const result = await usersServices.patch(patchUser, req.params.user_id);
+            const result = await usersServices.patch(
+                patchUser,
+                req.params.user_id
+            );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
             console.log(error.message);
@@ -89,13 +93,16 @@ class UsersController {
             return res.status(500).json({ errors: [error.message] });
         }
     }
-//verificar se é administrador ou lider
-//adm pode ver tudo e o lider pode ver dados de outras equipes e lideres
+    //verificar se é administrador ou lider
+    //adm pode ver tudo e o lider pode ver dados de outras equipes e lideres
     async deleteUser(req: Request, res: Response) {
         try {
             const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
             const user: IUser = payload.user;
-            const result = await usersServices.deleteUser(user, req.params.user_id);
+            const result = await usersServices.deleteUser(
+                user,
+                req.params.user_id
+            );
             console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
@@ -104,23 +111,19 @@ class UsersController {
         }
     }
 
-
-    /* async insert(req: Request, res: Response) {
+    async me(req: Request, res: Response) {
         try {
-            const errors: string[] = (req.query.errors as string[]) || [];
-
-            if (errors.length > 0) {
-                return res.status(422).json({ errors });
-            }
-
-            //const result = await this.service.insert(req.body);
-            //return res.status(result.status || 500).json(result);
-            return res.status(200).json({ data: req.body });
+            const result: IResult<IUser> = { errors: [], status: 200 };
+            const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
+            const user: IUser = payload.user;
+            result.data = user;
+            console.log(result);
+            return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log("Erro ao inserir o produto", error.message);
+            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
-    } */
+    }
 }
 
 const usersController = new UsersController();

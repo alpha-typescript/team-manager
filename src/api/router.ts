@@ -15,6 +15,7 @@ import LoginValidator from "../validators/LoginValidator";
 const router = express.Router();
 
 //users routes
+router.get("/users/me", authenticate, usersController.me);
 router.get("/users", authenticate, usersController.list);
 router.get("/users/:user_id", authenticate, usersController.getUser);
 router.delete("/users/:user_id", authenticate, usersController.deleteUser);
@@ -25,6 +26,7 @@ router.patch(
     UserValidator,
     usersController.updateUser
 );
+
 //teams routes
 router.get("/teams", authenticate, teamsController.list);
 router.get("/teams/:team_id", authenticate, teamsController.getTeam);
