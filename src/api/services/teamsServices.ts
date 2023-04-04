@@ -197,8 +197,11 @@ class TeamsServices {
         return result;
     }
 
-
-    async addUser(teamId: string, userId: string, user: IUser): Promise<IResult<IUser>> {
+    async addUser(
+        teamId: string,
+        userId: string,
+        user: IUser
+    ): Promise<IResult<IUser>> {
         let result: IResult<IUser> = { errors: [], status: 200 };
 
         try {
@@ -227,16 +230,21 @@ class TeamsServices {
         return result;
     }
 
-
-    async update(teamId: string, newName: string, newLeaderId: string): Promise<IResult<IUser[]>> {
+    async update(
+        teamId: string,
+        newName: string,
+        newLeaderId: string
+    ): Promise<IResult<IUser[]>> {
         let result: IResult<IUser[]> = { errors: [], status: 200 };
         try {
-            if (!(await teamsRepositories.exists(teamId))){
+            if (!(await teamsRepositories.exists(teamId))) {
                 throw new Error("Team does not exist");
             }
 
             if (!newLeaderId && !newName) {
-                throw new Error("Missing new leader name or new name for the team");
+                throw new Error(
+                    "Missing new leader name or new name for the team"
+                );
             }
 
             if (await usersRepositories.isLeader(newLeaderId)) {
@@ -247,7 +255,11 @@ class TeamsServices {
                 throw new Error("This user is not a member of the team");
             }
 
-            result = await teamsRepositories.update(teamId, newName, newLeaderId);
+            result = await teamsRepositories.update(
+                teamId,
+                newName,
+                newLeaderId
+            );
         } catch (error: any) {
             switch (error.message) {
                 case "Team does not exist":
@@ -261,6 +273,33 @@ class TeamsServices {
                     break;
                 case "This user is not a member of the team":
                     result.status = 401;
+                    break;
+                default:
+                    result.status = 500;
+                    break;
+            }
+            result.errors?.push(error.message);
+        }
+        return result;
+    }
+
+    async deleteTeam(user: IUser, teamId: string): Promise<IResult<ITeam>> {
+        let result: IResult<ITeam> = { errors: [], status: 200 };
+        try {
+            const membersResult = (await teamsRepositories.members(teamId))
+                .data as IUser[]; //check if team has members
+            if (user.isAdmin && membersResult.length > 0) {
+                result = await teamsRepositories.deleteTeam(teamId);
+            } else {
+                throw new Error("User doesn't have permission");
+            }
+        } catch (error: any) {
+            switch (error.message) {
+                case "User doesn't have permission":
+                    result.status = 401;
+                    break;
+                case "User not found":
+                    result.status = 404;
                     break;
                 default:
                     result.status = 500;

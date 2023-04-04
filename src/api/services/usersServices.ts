@@ -51,7 +51,7 @@ class UsersServices {
     async deleteUser(user: IUser, userId: string): Promise<IResult<IUser>> {
         let result: IResult<IUser> = { errors: [], status: 200 };
         try {
-            if (user.isAdmin) {
+            if (user.isAdmin && !(await userRepositories.isLeader(userId))) {
                 result = await userRepositories.deleteUser(userId);
             } else {
                 throw new Error("User doesn't have permission");
