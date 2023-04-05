@@ -74,7 +74,7 @@ class UsersServices {
     }
 
     async insert(user: IUser): Promise<IResult<IUser>> {
-        let result: IResult<IUser> = { errors: [], status: 200 };
+        let result: IResult<IUser> = { errors: [], status: 201 };
         try {
             result = await userRepositories.insert(user);
         } catch (error: any) {

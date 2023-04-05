@@ -83,7 +83,7 @@ class TeamsServices {
     }
 
     async insert(newTeam: ITeam, user: IUser): Promise<IResult<ITeam>> {
-        let result: IResult<ITeam> = { errors: [], status: 200 };
+        let result: IResult<ITeam> = { errors: [], status: 201 };
         try {
             //se usuário não é admin não pode fazer essa adição
             if (!user.isAdmin) {
