@@ -5,7 +5,7 @@ export default interface IUser {
     firstName?: string;
     lastName?: string;
     password?: string;
-    team?: string;
+    team?: string | null;
     isAdmin?: boolean;
     isLeader?: boolean;
 }

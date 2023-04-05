@@ -73,14 +73,14 @@ class UserRepositories {
             const queryText = `INSERT INTO users (id,username,email,first_name,last_name,password,team,is_admin) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`;
 
             const values = [
-                newUser.id || "",
-                newUser.username || "",
-                newUser.email || "",
-                newUser.firstName || "",
-                newUser.lastName || "",
-                newUser.password || "",
-                newUser.team || null,
-                newUser.isAdmin || false,
+                newUser.id!,
+                newUser.username!,
+                newUser.email!,
+                newUser.firstName!,
+                newUser.lastName!,
+                newUser.password!,
+                newUser.team!,
+                newUser.isAdmin!,
             ];
             const userResult = await this.db.query(queryText, values);
             result.data = {};

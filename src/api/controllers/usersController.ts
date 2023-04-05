@@ -20,7 +20,35 @@ class UsersController {
 
     async insert(req: Request, res: Response) {
         try {
-            const errors: string[] = (req.query.errors as string[]) || [];
+            let errors: string[] = (req.query.errors as string[]) || [];
+
+            //verify if a field is missing
+
+            const { username, firstName, lastName, email, password } = req.body;
+
+            const fields = [username, firstName, lastName, email, password];
+
+            const fieldsName = [
+                "username",
+                "firstName",
+                "lastName",
+                "email",
+                "password",
+            ];
+
+            let fieldsMissing: Array<string> = []; //array with fiels are missing
+
+            fields.forEach((field, index) => {
+                if (!field) {
+                    fieldsMissing.push(
+                        `Field '${fieldsName[index]}' is missing`
+                    );
+                }
+            });
+
+            if (fieldsMissing.length > 0) {
+                return res.status(400).json({ errors: fieldsMissing });
+            }
 
             if (errors.length > 0) {
                 return res.status(422).json({ errors });
@@ -33,8 +61,8 @@ class UsersController {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 password: req.body.password,
-                team: req.body.team,
-                isAdmin: req.body.isAdmin,
+                team: null,
+                isAdmin: false,
             };
 
             const result = await usersServices.insert(newUser);

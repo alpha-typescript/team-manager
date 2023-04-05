@@ -14,7 +14,7 @@ class UsersServices {
         } catch (error: any) {
             result.errors?.push(error.message);
             if (error.message === "User doesn't have permission") {
-                result.status === 401;
+                result.status = 403;
             } else {
                 result.status = 500;
             }
@@ -41,7 +41,7 @@ class UsersServices {
         } catch (error: any) {
             result.errors?.push(error.message);
             if (error.message === "User doesn't have permission") {
-                result.status === 401;
+                result.status = 403;
             } else {
                 result.status = 500;
             }
@@ -59,7 +59,7 @@ class UsersServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "User not found":
                     result.status = 404;
@@ -103,7 +103,7 @@ class UsersServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;

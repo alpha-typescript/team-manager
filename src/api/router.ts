@@ -10,12 +10,17 @@ import LoginValidator from "../validators/LoginValidator";
 
 const router = express.Router();
 
+//docs
+router.get("/", (req, res) => {
+    res.redirect("/docs");
+});
+
 //users routes
 router.get("/users/me", authenticate, usersController.me);
 router.get("/users", authenticate, usersController.list);
 router.get("/users/:user_id", authenticate, usersController.getUser);
 router.delete("/users/:user_id", authenticate, usersController.deleteUser);
-router.post("/users", authenticate, UserValidator, usersController.insert);
+router.post("/users", UserValidator, usersController.insert);
 router.patch(
     "/users/:user_id",
     authenticate,
