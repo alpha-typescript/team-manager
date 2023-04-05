@@ -106,8 +106,6 @@ class TeamsRepositories {
         return result;
     }
 
-    //insert team - need to be a adm to do this
-
     public async insert(newTeam: ITeam): Promise<IResult<ITeam>> {
         const result: IResult<ITeam> = { errors: [], status: 200 };
 
@@ -135,10 +133,7 @@ class TeamsRepositories {
                 `;
 
             const updateUserValues = [insertTeamValues[0], insertTeamValues[2]];
-            const updateUserResult = await this.db.query(
-                updateUserQueryText,
-                updateUserValues
-            );
+            await this.db.query(updateUserQueryText, updateUserValues);
 
             const team: ITeam = {
                 id: insertTeamResult[0].id,
@@ -189,8 +184,6 @@ class TeamsRepositories {
         userId: string
     ): Promise<IResult<IUser>> {
         const result: IResult<IUser> = { errors: [], status: 200 };
-
-        console.log(teamId, userId);
 
         try {
             const userResult = await this.db.query(

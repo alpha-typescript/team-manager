@@ -14,7 +14,6 @@ class TeamsController {
             const result = await teamsServices.list(user);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -30,7 +29,6 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -46,7 +44,6 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -59,7 +56,6 @@ class TeamsController {
                 return res.status(422).json({ errors });
             }
 
-            //if you reached here, it's because in req.body everything is ok!
             const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
             const user: IUser = payload.user;
 
@@ -72,7 +68,6 @@ class TeamsController {
             const result = await teamsServices.insert(newTeam, user);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -88,7 +83,6 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -104,7 +98,6 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -125,10 +118,8 @@ class TeamsController {
                 req.params.user_id,
                 user
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -141,10 +132,8 @@ class TeamsController {
                 user,
                 req.params.team_id
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }

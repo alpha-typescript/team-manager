@@ -309,20 +309,6 @@ class TeamsServices {
         }
         return result;
     }
-
-    /*     async insert(product: IProduct): Promise<IResult<IProduct>> {
-        const pool = await Postgres.pool();
-        let result: IResult<IProduct> = { errors: [], status: 200 };
-        try {
-            result = await this.repository.insert(pool, product);
-        } catch (error: any) {
-            result.errors?.push(error.message);
-            result.status = 500;
-        }
-
-        return result;
-    }
- */
 }
 
 const teamsServices = new TeamsServices();
