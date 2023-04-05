@@ -83,7 +83,7 @@ class TeamsServices {
     }
 
     async insert(newTeam: ITeam, user: IUser): Promise<IResult<ITeam>> {
-        let result: IResult<ITeam> = { errors: [], status: 200 };
+        let result: IResult<ITeam> = { errors: [], status: 201 };
         try {
             //se usuário não é admin não pode fazer essa adição
             if (!user.isAdmin) {
@@ -309,20 +309,6 @@ class TeamsServices {
         }
         return result;
     }
-
-    /*     async insert(product: IProduct): Promise<IResult<IProduct>> {
-        const pool = await Postgres.pool();
-        let result: IResult<IProduct> = { errors: [], status: 200 };
-        try {
-            result = await this.repository.insert(pool, product);
-        } catch (error: any) {
-            result.errors?.push(error.message);
-            result.status = 500;
-        }
-
-        return result;
-    }
- */
 }
 
 const teamsServices = new TeamsServices();

@@ -1,8 +1,6 @@
 import IUser from "../../interfaces/iUser";
 import IResult from "../../interfaces/iResult";
 import ConnectDB from "../database/postgres";
-import { v4 as uuidV4 } from "uuid";
-import { QueryResult } from "pg";
 class UserRepositories {
     private db = new ConnectDB();
 
@@ -73,7 +71,6 @@ class UserRepositories {
 
         try {
             const queryText = `INSERT INTO users (id,username,email,first_name,last_name,password,team,is_admin) VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`;
-            console.log("This is the new user", newUser);
 
             const values = [
                 newUser.id!,
@@ -112,8 +109,6 @@ class UserRepositories {
 
     public async getUser(userId: string): Promise<IResult<IUser>> {
         const result: IResult<IUser> = { errors: [], status: 200 };
-
-        console.log(userId);
 
         try {
             const userResult = await this.db.query(
@@ -222,33 +217,6 @@ class UserRepositories {
 
         return result;
     }
-    /* async insert(pool: pg.Pool, product: IProduct): Promise<IResult<IProduct>> {
-        const iresult: IResult<IProduct> = { errors: [], status: 200 };
-        try {
-            const query = `INSERT INTO store.product (id, name, price, category_id) VALUES ($1, $2, $3, $4) RETURNING *`;
-            const values = [
-                uuidv4(),
-                product.name,
-                product.price,
-                product.category,
-            ];
-            const queryResult = await pool.query(query, values);
-            if (queryResult.rowCount > 0) {
-                iresult.data = {
-                    id: queryResult.rows[0].id,
-                    name: queryResult.rows[0].name,
-                    price: queryResult.rows[0].price,
-                    category: queryResult.rows[0].category_id,
-                    createdAt: queryResult.rows[0].created_at,
-                    updatedAt: queryResult.rows[0].updated_at,
-                };
-            }
-        } catch (error: any) {
-            iresult.errors?.push(error.message);
-            iresult.status = 500;
-        }
-        return iresult;
-    } */
 }
 
 const userRepositories = new UserRepositories();

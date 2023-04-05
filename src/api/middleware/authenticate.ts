@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwtLib from "jsonwebtoken";
 import { config } from "dotenv";
-config({ path: "config/.env" }); // cool, thanks chatGPT
+config({ path: "config/.env" });
 
 export default async function authenticate(
     req: Request,

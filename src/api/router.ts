@@ -7,10 +7,6 @@ import UserValidator from "../validators/UserValidator";
 import TeamValidator from "../validators/TeamValidator";
 import AddTeamToUserValidator from "../validators/AddTeamToUserValidator";
 import LoginValidator from "../validators/LoginValidator";
-//import usersRouter from "./routes/usersRoutes";
-// import teamsRouter from "./routes/teamsRoutes";
-// import loginController from "./routes/loginController";
-// import logoutController from "./routes/logoutController";
 
 const router = express.Router();
 
@@ -59,7 +55,3 @@ router.post("/login", LoginValidator, loginController.login);
 router.delete("/logout", loginController.logout);
 
 export default router;
-
-//--------
-// ADICIONE ROTAR NESSE ARQUIVO, IGNORE A PASTA ROUTES POR ENQUANTO!!!!
-//--

@@ -14,7 +14,6 @@ class UsersController {
             const result = await usersServices.list(user);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -55,8 +54,6 @@ class UsersController {
                 return res.status(422).json({ errors });
             }
 
-            //if you reached here, it's because in req.body everything is ok!
-
             const newUser: IUser = {
                 id: uuidV4(),
                 username: req.body.username,
@@ -71,7 +68,6 @@ class UsersController {
             const result = await usersServices.insert(newUser);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -102,7 +98,6 @@ class UsersController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -115,15 +110,12 @@ class UsersController {
                 user,
                 req.params.user_id
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
-    //verificar se é administrador ou lider
-    //adm pode ver tudo e o lider pode ver dados de outras equipes e lideres
+
     async deleteUser(req: Request, res: Response) {
         try {
             const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
@@ -132,10 +124,8 @@ class UsersController {
                 user,
                 req.params.user_id
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -146,10 +136,8 @@ class UsersController {
             const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
             const user: IUser = payload.user;
             result.data = user;
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
