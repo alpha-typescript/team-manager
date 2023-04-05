@@ -14,7 +14,7 @@ class UsersServices {
         } catch (error: any) {
             result.errors?.push(error.message);
             if (error.message === "User doesn't have permission") {
-                result.status === 401;
+                result.status = 403;
             } else {
                 result.status = 500;
             }
@@ -41,7 +41,7 @@ class UsersServices {
         } catch (error: any) {
             result.errors?.push(error.message);
             if (error.message === "User doesn't have permission") {
-                result.status === 401;
+                result.status = 403;
             } else {
                 result.status = 500;
             }
@@ -59,7 +59,7 @@ class UsersServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "User not found":
                     result.status = 404;
@@ -74,7 +74,7 @@ class UsersServices {
     }
 
     async insert(user: IUser): Promise<IResult<IUser>> {
-        let result: IResult<IUser> = { errors: [], status: 200 };
+        let result: IResult<IUser> = { errors: [], status: 201 };
         try {
             result = await userRepositories.insert(user);
         } catch (error: any) {
@@ -103,7 +103,7 @@ class UsersServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;
@@ -131,19 +131,6 @@ class UsersServices {
         }
         return result;
     }
-    /*     async insert(product: IProduct): Promise<IResult<IProduct>> {
-        const pool = await Postgres.pool();
-        let result: IResult<IProduct> = { errors: [], status: 200 };
-        try {
-            result = await this.repository.insert(pool, product);
-        } catch (error: any) {
-            result.errors?.push(error.message);
-            result.status = 500;
-        }
-
-        return result;
-    }
- */
 }
 
 const usersServices = new UsersServices();

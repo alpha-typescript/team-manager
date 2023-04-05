@@ -15,7 +15,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 default:
                     result.status = 500;
@@ -40,7 +40,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;
@@ -68,7 +68,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;
@@ -83,7 +83,7 @@ class TeamsServices {
     }
 
     async insert(newTeam: ITeam, user: IUser): Promise<IResult<ITeam>> {
-        let result: IResult<ITeam> = { errors: [], status: 200 };
+        let result: IResult<ITeam> = { errors: [], status: 201 };
         try {
             //se usuário não é admin não pode fazer essa adição
             if (!user.isAdmin) {
@@ -131,7 +131,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "['leader'] field is missing":
                     result.status = 400;
@@ -141,10 +141,10 @@ class TeamsServices {
                     result.status = 404;
                     break;
                 case "[field 'leader'] this user is admin, so can not be a leader":
-                    result.status = 403; //coloquei 403 mas preciso verificar se corresponde mesmo
+                    result.status = 400; //coloquei 403 mas preciso verificar se corresponde mesmo
                     break;
                 case "[field 'leader'] this user has already a team, so can not be a leader":
-                    result.status = 403; //coloquei 403 mas preciso verificar se corresponde mesmo
+                    result.status = 400; //coloquei 403 mas preciso verificar se corresponde mesmo
                     break;
                 default:
                     result.status = 500;
@@ -216,7 +216,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;
@@ -288,7 +288,7 @@ class TeamsServices {
         try {
             const membersResult = (await teamsRepositories.members(teamId))
                 .data as IUser[]; //check if team has members
-            if (user.isAdmin && membersResult.length === 0) {
+            if (user.isAdmin && membersResult.length <= 1) {
                 result = await teamsRepositories.deleteTeam(teamId);
             } else {
                 throw new Error("User doesn't have permission");
@@ -296,7 +296,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "User not found":
                     result.status = 404;
@@ -309,20 +309,6 @@ class TeamsServices {
         }
         return result;
     }
-
-    /*     async insert(product: IProduct): Promise<IResult<IProduct>> {
-        const pool = await Postgres.pool();
-        let result: IResult<IProduct> = { errors: [], status: 200 };
-        try {
-            result = await this.repository.insert(pool, product);
-        } catch (error: any) {
-            result.errors?.push(error.message);
-            result.status = 500;
-        }
-
-        return result;
-    }
- */
 }
 
 const teamsServices = new TeamsServices();

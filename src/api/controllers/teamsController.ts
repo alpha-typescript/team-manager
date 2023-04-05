@@ -14,7 +14,6 @@ class TeamsController {
             const result = await teamsServices.list(user);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -30,7 +29,6 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -46,20 +44,40 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
 
     async insert(req: Request, res: Response) {
         try {
-            const errors: string[] = (req.query.errors as string[]) || [];
+            let errors: string[] = (req.query.errors as string[]) || [];
+
+            //verify if a field is missing
+
+            const { name, leader } = req.body;
+
+            const fields = [name, leader];
+
+            const fieldsName = ["name", "leader"];
+
+            let fieldsMissing: Array<string> = []; //array with fiels are missing
+
+            fields.forEach((field, index) => {
+                if (!field) {
+                    fieldsMissing.push(
+                        `Field '${fieldsName[index]}' is missing`
+                    );
+                }
+            });
+
+            if (fieldsMissing.length > 0) {
+                return res.status(400).json({ errors: fieldsMissing });
+            }
 
             if (errors.length > 0) {
                 return res.status(422).json({ errors });
             }
 
-            //if you reached here, it's because in req.body everything is ok!
             const payload = jwtLib.decode(req.cookies["session"]) as JwtPayload;
             const user: IUser = payload.user;
 
@@ -72,7 +90,6 @@ class TeamsController {
             const result = await teamsServices.insert(newTeam, user);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -88,7 +105,6 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -104,7 +120,6 @@ class TeamsController {
             );
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -125,10 +140,8 @@ class TeamsController {
                 req.params.user_id,
                 user
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
@@ -141,10 +154,8 @@ class TeamsController {
                 user,
                 req.params.team_id
             );
-            console.log(result);
             return res.status(result.status || 500).json(result);
         } catch (error: any) {
-            console.log(error.message);
             return res.status(500).json({ errors: [error.message] });
         }
     }
