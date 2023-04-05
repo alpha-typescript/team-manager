@@ -15,7 +15,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 default:
                     result.status = 500;
@@ -40,7 +40,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;
@@ -68,7 +68,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;
@@ -131,7 +131,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "['leader'] field is missing":
                     result.status = 400;
@@ -141,10 +141,10 @@ class TeamsServices {
                     result.status = 404;
                     break;
                 case "[field 'leader'] this user is admin, so can not be a leader":
-                    result.status = 403; //coloquei 403 mas preciso verificar se corresponde mesmo
+                    result.status = 400; //coloquei 403 mas preciso verificar se corresponde mesmo
                     break;
                 case "[field 'leader'] this user has already a team, so can not be a leader":
-                    result.status = 403; //coloquei 403 mas preciso verificar se corresponde mesmo
+                    result.status = 400; //coloquei 403 mas preciso verificar se corresponde mesmo
                     break;
                 default:
                     result.status = 500;
@@ -216,7 +216,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "Team does not exist":
                     result.status = 404;
@@ -296,7 +296,7 @@ class TeamsServices {
         } catch (error: any) {
             switch (error.message) {
                 case "User doesn't have permission":
-                    result.status = 401;
+                    result.status = 403;
                     break;
                 case "User not found":
                     result.status = 404;
