@@ -26,6 +26,13 @@
     "application/json"
   ],
   "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/users/me": {
       "get": {
         "description": "",
@@ -75,18 +82,15 @@
                 },
                 "password": {
                   "example": "any"
-                },
-                "team": {
-                  "example": "any"
-                },
-                "isAdmin": {
-                  "example": "any"
                 }
               }
             }
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
           "422": {
             "description": "Unprocessable Entity"
           },
@@ -213,6 +217,9 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request"
+          },
           "422": {
             "description": "Unprocessable Entity"
           },
